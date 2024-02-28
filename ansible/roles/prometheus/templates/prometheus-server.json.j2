@@ -18,9 +18,20 @@
             "dest": "/etc/prometheus/extras/",
             "preserve_properties": true,
             "optional": true
-        }
-{% if enable_prometheus_alertmanager | bool %}
-        ,{
+        }{% if prometheus_enable_tls_backend | bool %},
+        {
+            "source": "{{ container_config_directory }}/prometheus-cert.pem",
+            "dest": "/etc/prometheus/certs/prometheus-cert.pem",
+            "owner": "prometheus",
+            "perm": "0600"
+        },
+        {
+            "source": "{{ container_config_directory }}/prometheus-key.pem",
+            "dest": "/etc/prometheus/certs/prometheus-key.pem",
+            "owner": "prometheus",
+            "perm": "0600"
+        }{% endif %}{% if enable_prometheus_alertmanager | bool %},
+        {
             "source": "{{ container_config_directory }}/*.rules",
             "dest": "/etc/prometheus/",
             "optional": true,
